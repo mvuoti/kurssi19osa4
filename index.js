@@ -7,7 +7,7 @@ const mongoose = require('mongoose')
 
 const config = require('./utils/config')
 
-mongoose.connect(config.MONGO_URL, config.MONGO_OPTIONS) 
+mongoose.connect(config.MONGO_URL, config.MONGO_OPTIONS)
 
 const blogsController = require('./controllers/blogs_controller')
 
