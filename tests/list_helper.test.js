@@ -1,3 +1,7 @@
+// unit tests of list_helper.js
+
+
+// functions to be tested
 const {
   dummy,
   totalLikes,
@@ -6,64 +10,67 @@ const {
   mostLikes
 } = require('../utils/list_helper')
 
+// content for testing
 const emptyList = []
-const testList = require('./test_blog_entries')
+const blogEntriesForTesting = require('./blog_entries_for_testing')
 
-describe('dummy', () => {
-  test('Tyhjä lista', () => {
+// start of tests
+
+describe('dummy: returns 1 for any list', () => {
+  test('test list of blog entries gives 1', () => {
+    expect(dummy(blogEntriesForTesting)).toBe(1)
+  })
+  test('empty list gives 1', () => {
     expect(dummy(emptyList)).toBe(1)
   })
-  test('Blogeja sisältävä lista', () => {
-    expect(dummy(testList)).toBe(1)
-  })
 })
 
-describe('totalLikes', () => {
-  test('Tyhjä lista', () => {
+describe('totalLikes: returns sum of likes in blogs in list', () => {
+  test('test list of blog entries gives the correct sum of likes', () => {
+    expect(totalLikes(blogEntriesForTesting)).toBe(7 + 5 + 12 + 10 + 0 + 2)
+  })
+  test('empty list gives 1', () => {
     expect(totalLikes(emptyList)).toBe(0)
   })
-  test('Kaikki testiblogit', () => {
-    expect(totalLikes(testList)).toBe(7 + 5 + 12 + 10 + 0 + 2)
-  })
 })
 
-describe('favoriteBlog', () => {
+describe('favoriteBlog: returns the blog with most likes', () => {
   const blogWithMostLikes = {
     title: 'Canonical string reduction',
     author: 'Edsger W. Dijkstra',
     url: 'http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html',
     likes: 12
   }
-  test('Testilistasta löytyy 3. postaus (suosituin)', () => {
-    expect(favoriteBlog(testList)).toEqual(blogWithMostLikes)
+  test('test list of blog entries gives the right blog', () => {
+    expect(favoriteBlog(blogEntriesForTesting)).toEqual(blogWithMostLikes)
   })
-  test('Tyhjä lista tuottaa undefined', () => {
-    expect(favoriteBlog(emptyList)).toBe(undefined)
+  test('empty list gives null', () => {
+    expect(favoriteBlog(emptyList)).toBe(null)
   })
 })
 
-describe('mostBlogs', () => {
+describe('mostBlogs: returns an object with the author with most blog entries and the count', () => {
   const expectedResult = {
     author: 'Robert C. Martin',
     blogs: 3
   }
-  test('Testilistan ahkerin: Martin, postauksia 3', () => {
-    expect(mostBlogs(testList)).toEqual(expectedResult)
+  test('test list of blog entries gives Robert C. Martin with count 3', () => {
+    expect(mostBlogs(blogEntriesForTesting)).toEqual(expectedResult)
   })
-  test('Tyhjä lista -> null', () => {
+  test('empty list gives null', () => {
     expect(mostBlogs([])).toBe(null)
   })
 })
 
-describe('mostLikes', () => {
+describe('mostLikes: returns the blogger with most likes, and the likes total', () => {
   const expectedResult = {
     author: 'Edsger W. Dijkstra',
     likes: 17
   }
-  test('Eniten tykkäyksiä: Dijkstra, 17', () => {
-    expect(mostLikes(testList)).toEqual(expectedResult)
+  test('test list gives Edsger W.Dijkstra, 17 likes' , () => {
+    expect(mostLikes(blogEntriesForTesting)).toEqual(expectedResult)
   })
-  test('Tyhjä lista -> null', () => {
+  test('empty list gives null', () => {
     expect(mostLikes([])).toBe(null)
   })
 })
