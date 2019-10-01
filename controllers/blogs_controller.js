@@ -16,27 +16,15 @@ app.get('/', async (request, response, next) => {
   }
 })
 
-// // original version, w/promise syntax:
-// // get all blogs in database
-// app.get('/', (request, response, next) => {
-//  Blog
-//    .find({})
-//    .then(blogs => {
-//      response.json(blogs)
-//    })
-//    .catch(error => next(error)) 
-// })
-
 // post a new blog
-app.post('/', (request, response, next) => {
-  const blog = new Blog(request.body)
-
-  blog
-    .save()
-    .then(result => {
-      response.status(201).json(result)
-    })
-    .catch(error => next(error)) 
+app.post('/', async (request, response, next) => {
+  try {
+    const blog = new Blog(request.body)
+    const result = await blog.save()
+    response.status(201).json(result)
+  } catch (error) {
+    next(error)
+  }
 })
 
 module.exports = app

@@ -38,4 +38,21 @@ test('GET /api/blogs kaikilla blogikirjauksilla kenttä id (ei _id)', async (don
   done()
 })
 
+test(
+  'POST /api/blogs tallennus onnistuu, blogien määrä += 1, lisätty löytyy kannasta',
+  async (done) => {
+    const blogToPost = {
+      author: 'Test Author', title: 'Test Blog Entry', url: 'http://www.yle.fi', likes: 13
+    }
+    const postResponse = await api.post('/api/blogs')
+      .set('Content-type', 'application/json; charset=utf-8')
+      .send(blogToPost)
+    expect(postResponse.status).toEqual(201)
+    const getResponse = await api.get('/api/blogs')
+    const blogsAfterPost = getResponse.body
+    expect(blogsAfterPost.length).toEqual(apiTestHelper.blogEntriesForTesting.length + 1)
+    expect(blogsAfterPost.map(b => b.author)).toContain(blogToPost.author)
+    done()
+  })
+
 // end of tests
