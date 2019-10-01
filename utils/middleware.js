@@ -1,7 +1,7 @@
 // local modules
 const logging = require('../utils/logging')
 
-// middleware to handle a request with no route
+// middleware to handle a request with no matching route
 const unknownEndpoint = (req, res) => {
   res.status(404).send({message: 'Unknown endpoint ' + req.path})
 }

@@ -8,7 +8,7 @@ const makeLogLine = (logLevel, params) => {
     (new Date()).toISOString(),
     logLevel,
     params.join(' ')
-  ].join( '|' )
+  ].join('|')
 }
 
 // write log entry of loglevel INFO

@@ -1,6 +1,5 @@
 // unit tests of list_helper.js
 
-
 // functions to be tested
 const {
   dummy,
