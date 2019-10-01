@@ -30,4 +30,12 @@ test('GET /api/blogs palauttaa kaikki kirjaukset, vastauksen tyyppi JSON', async
   done()
 })
 
+test('GET /api/blogs kaikilla blogikirjauksilla kenttä id (ei _id)', async (done) => {
+  const result = await api.get('/api/blogs')
+  const blogs = result.body
+  const firstBlog = blogs[0]
+  expect(firstBlog.id).toBeDefined()
+  done()
+})
+
 // end of tests
