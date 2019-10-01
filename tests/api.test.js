@@ -61,4 +61,21 @@ test('new blog entry gets likes set to 0 by default if not given', () => {
   expect(newBlog.likes).toEqual(0)
 })
 
+test('POST /api/blogs missing title or url cause status code 400', async (done) => {
+  const urllessBlog = new Blog({ author: 'any', title: 'any', likes: 13 })
+  const titlelessBlog = new Blog({ author: 'any', url: 'http://any.any', likes: 13 })
+
+  const urllessResponse = await api.post('/api/blogs')
+    .set('Content-type', 'application/json; charset=utf-8')
+    .send(urllessBlog)
+  expect(urllessResponse.status).toEqual(400)
+  
+  const titlelessResponse = await api.post('/api/blogs')
+    .set('Content-type', 'application/json; charset=utf-8')
+    .send(titlelessBlog)
+  expect(titlelessResponse.status).toEqual(400)
+
+  done()
+})
+
 // end of tests

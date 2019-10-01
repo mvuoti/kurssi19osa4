@@ -14,9 +14,13 @@ const dumpRequest = (req, res, next) => {
 
 // middleware to log all uncaught errors
 const handleError = (error, req, res, next) => {
-  !!error.name && logging.error("error.name = ", error.name)
-  logging.error(error.message)
-  next(error)
+  if (error.name === 'ValidationError') {
+    res.status(400).send({ message: error.name })
+  } else {
+    !!error.name && logging.error("error.name = ", error.name)
+    logging.error(error.message)
+    next(error)
+  }
 }
 
 module.exports = {
