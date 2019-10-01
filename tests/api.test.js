@@ -5,6 +5,7 @@ const mongoose = require('mongoose')
 // local modules
 const app = require('../app.js')
 const apiTestHelper = require('./api_test_helper')
+const Blog = require('../models/blog')
 
 // wrap application in supertest
 const api = supertest(app)
@@ -54,5 +55,10 @@ test(
     expect(blogsAfterPost.map(b => b.author)).toContain(blogToPost.author)
     done()
   })
+
+test('new blog entry gets likes set to 0 by default if not given', () => {
+  const newBlog = new Blog({ author: 'any', title: 'any', url: 'http://any.any' })
+  expect(newBlog.likes).toEqual(0)
+})
 
 // end of tests
