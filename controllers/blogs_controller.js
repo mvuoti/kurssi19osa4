@@ -27,4 +27,14 @@ app.post('/', async (request, response, next) => {
   }
 })
 
+// delete a blog
+app.delete('/:id', async (request, response, next) => {
+  try {
+    await Blog.deleteOne({ _id: request.params.id })
+    response.status(204).end()
+  } catch (error) {
+    next(error)
+  }
+})
+
 module.exports = app
