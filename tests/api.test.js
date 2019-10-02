@@ -25,7 +25,7 @@ afterAll(() => {
 // tests
 
 describe('Blog (model)', () => {
-  test('POST: jos likes puuttuu, asetetaan oletusarvona 0', () => {
+  test('POST: jos likes puuttuu, asetetaan oletusarvoksi 0', () => {
     const newBlog = new Blog({ author: 'any', title: 'any', url: 'http://any.any' })
     expect(newBlog.likes).toEqual(0)
   })
@@ -99,5 +99,25 @@ describe('/api/blogs', () => {
     expect(_.some(blogsAfter, b => b.id === idToDelete)).toBeFalsy()
 
     done()
+  })
+
+  test('PUT: http-status 200, dokumentin kentät ovat päivittyneet kannassa', async () => {
+    const getBeforeResponse = await api.get('/api/blogs')
+    const blogsBefore = getBeforeResponse.body
+    const blogToUpdate = blogsBefore[0]
+
+    const newValues = {
+      title: 'NEW TITLE',
+      author: 'NEW AUTHOR',
+      url: 'http://new.url',
+      likes: 8888
+    }
+    const putResponse = await api.put(`/api/blogs/${blogToUpdate.id}`).send(newValues)
+    expect(putResponse.status).toEqual(200)
+
+    const getAfterResponse = await api.get(`/api/blogs/${blogToUpdate.id}`)
+    expect(getAfterResponse.status).toEqual(200)
+    const blogAfter = getAfterResponse.body
+    expect(_.every(newValues, (valBefore, key) => blogAfter[key] === valBefore)).toBeTruthy()
   })
 })

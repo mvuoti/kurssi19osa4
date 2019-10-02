@@ -10,7 +10,18 @@ const app = express()
 app.get('/', async (request, response, next) => {
   try {
     const blogs = await Blog.find({})
-    response.json(blogs.map(b => b.toJSON()))
+    response.status(200).json(blogs.map(b => b.toJSON()))
+  } catch (error) {
+    next(error)
+  }
+})
+
+// fetch a single blog by id
+app.get('/:id', async (request, response, next) => {
+  try {
+    const id = request.params.id
+    const blog = await Blog.findById(id)
+    response.status(200).json(blog)
   } catch (error) {
     next(error)
   }
@@ -30,8 +41,21 @@ app.post('/', async (request, response, next) => {
 // delete a blog
 app.delete('/:id', async (request, response, next) => {
   try {
-    await Blog.deleteOne({ _id: request.params.id })
+    const id = request.params.id
+    await Blog.findByIdAndDelete(id)
     response.status(204).end()
+  } catch (error) {
+    next(error)
+  }
+})
+
+// update a blog
+app.put('/:id', async (request, response, next) => {
+  try {
+    const id = request.params.id
+    const values = request.body
+    const updatedDoc = await Blog.findByIdAndUpdate(id, values, { new: true })
+    response.status(200).json(updatedDoc.toJSON())
   } catch (error) {
     next(error)
   }
