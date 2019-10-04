@@ -14,6 +14,13 @@ const dumpRequest = (req, res, next) => {
 
 // middleware to log all uncaught errors
 const handleError = (error, req, res, next) => {
+
+  if (res.headersSent) {
+    console.error(`HEADERS SENT ${req.method} ${req.path}`)
+    logging.error(`${error.message} -- ${req.path}`)
+    next()
+  }
+
   if (error.name === 'ValidationError') {
     res.status(400).send({ message: error.name })
   } else {
