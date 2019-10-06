@@ -1,6 +1,3 @@
-// unit tests of list_helper.js
-
-// functions to be tested
 const {
   dummy,
   totalLikes,
@@ -12,8 +9,6 @@ const {
 // content for testing
 const emptyList = []
 const blogEntriesForTesting = require('./blog_entries_for_testing')
-
-// start of tests
 
 describe('dummy: returns 1 for any list', () => {
   test('test list of blog entries gives 1', () => {
@@ -66,7 +61,7 @@ describe('mostLikes: returns the blogger with most likes, and the likes total', 
     author: 'Edsger W. Dijkstra',
     likes: 17
   }
-  test('test list gives Edsger W.Dijkstra, 17 likes' , () => {
+  test('test list gives Edsger W.Dijkstra, 17 likes', () => {
     expect(mostLikes(blogEntriesForTesting)).toEqual(expectedResult)
   })
   test('empty list gives null', () => {

@@ -1,4 +1,3 @@
-// local modules
 const logging = require('../utils/logging')
 
 // middleware to handle a request with no matching route
@@ -19,12 +18,12 @@ const handleError = (error, req, res, next) => {
     logging.error(`${error.message} -- ${req.path}`)
     next()
   }
-
   if (error.name === 'ValidationError') {
     res.status(400).send({ message: error.name })
   } else {
-    !!error.name && logging.error('error.name = ', error.name)
-    logging.error(error.message)
+    if (!error.name) {
+      logging.error('error.name = ', error.name)
+    }
     next(error)
   }
 }

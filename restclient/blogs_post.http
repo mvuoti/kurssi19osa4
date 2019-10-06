@@ -1,0 +1,37 @@
+POST http://localhost:3003/api/blogs
+Content-type: application/json
+
+{
+    "title": "Koti kuntoon rahalla",
+    "author": "Aulis Apunen",
+    "url": "http://www.mtv.fi",
+    "likes": 0,
+    "user": "5d99f29e4f1cd43fa0ea87d9"
+}
+
+###
+
+POST http://localhost:3003/api/blogs
+Content-type: application/json
+
+{
+    "title": "Minä, Aku Ankka",
+    "author": "Carl Barks",
+    "url": "http://www.efora.fi",
+    "likes": 0,
+    "user": "5d99f29e4f1cd43fa0ea87d9"
+}
+
+
+###
+
+POST http://localhost:3003/api/blogs
+Content-type: application/json
+
+{
+    "title": "Taisteluni (ja mitä tekisin toisin)",
+    "author": "Ilkka Kanerva",
+    "url": "http://www.Kempele.fi",
+    "likes": 0,
+    "user": "5d99f2f34f1cd43fa0ea87dc"
+}

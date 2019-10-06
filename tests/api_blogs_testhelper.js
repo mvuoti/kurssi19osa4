@@ -1,11 +1,8 @@
-// local modules
 const Blog = require('../models/blog')
 const User = require('../models/user')
 
-// set of blog entries used in tests
 const blogEntriesForTesting = require('./blog_entries_for_testing')
 
-// a valid user id to use as the creator of blogs
 const getAnyUser = async () => {
   const anyUser = await User.findOne({})
   if (!anyUser) {
@@ -14,10 +11,6 @@ const getAnyUser = async () => {
   return anyUser
 }
 
-// utility function to populate the database with
-// pre-defined set of blog entries for testing.
-// cross-refs between users and blogs need
-// to be set up.
 const initializeBlogCollection = async () => {
   await Blog.deleteMany({})
 
@@ -30,8 +23,7 @@ const initializeBlogCollection = async () => {
       o => new Blog({ ...o, user: userDoc.id })
     ))
 
-  // update user's blogs field with ids of
-  // blogs created above
+  // update the reference from user to blogs
   const blogIds = insertResult.map(b => b.id)
   userDoc.blogs = blogIds
   await userDoc.save()

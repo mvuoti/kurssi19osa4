@@ -1,7 +1,5 @@
-// dependencies
 const _ = require('lodash')
 
-// returns 1 for any input
 const dummy = (blogs) => {
   return 1
 }

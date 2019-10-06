@@ -1,21 +1,10 @@
-// dependencies
 const supertest = require('supertest')
 const mongoose = require('mongoose')
 const _ = require('lodash')
 
-// local modules
 const config = require('../utils/config')
 const app = require('../app.js')
-const Blog = require('../models/blog')
 
-// helpers for testing
-const apiBlogsTesthelper = require('./api_blogs_testhelper')
-const apiUsersTesthelper = require('./api_users_testhelper')
-
-// wrap application in supertest
-const api = supertest(app)
-
-// connect or die
 mongoose
   .connect(config.MONGO_URL, config.MONGO_OPTIONS)
   .catch(e => {
@@ -23,12 +12,16 @@ mongoose
     process.exit(1)
   })
 
-// test entries for various test scenarios
+const apiBlogsTesthelper = require('./api_blogs_testhelper')
+const apiUsersTesthelper = require('./api_users_testhelper')
+
+const api = supertest(app)
+
+// setup test entries for various test scenarios
 const testAuthor = 'Dummy Author'
 const testTitle = 'Dummy Title'
 const testUrl = 'http://www.yle.fi'
 const testLikes = 13
-
 const testEntryFull = { author: testAuthor, title: testTitle, url: testUrl, likes: testLikes }
 const testEntryUndefLikes = { author: testAuthor, title: testTitle, url: testUrl }
 const testEntryUndefTitle = { author: testAuthor, url: testUrl, likes: testLikes }
@@ -40,31 +33,26 @@ const testEntryUpdates = {
   likes: testLikes + 1
 }
 
-// initialize database to known state
-// before each test. operation is asynchronic.
-// user collection must be initialized first,
-// in order to have a valid user id available
-// when populating blog collection.
-beforeEach(async () => {
-  await apiUsersTesthelper.initializeUserCollection()
-  await apiBlogsTesthelper.initializeBlogCollection()
-})
-
-// database connection must be explicitly closed after tests
 afterAll(() => {
   mongoose.connection.close()
 })
 
-// tests
-
+// schema-enforced default for likes
 describe('Blog (model)', () => {
   test('POST: jos likes puuttuu, asetetaan oletusarvoksi 0', () => {
+    const Blog = require('../models/blog')
     const newBlog = new Blog(testEntryUndefLikes)
     expect(newBlog.likes).toEqual(0)
   })
 })
 
 describe('/api/blogs', () => {
+  beforeEach(async () => {
+    // order matters -- blog creation needs a user to work
+    await apiUsersTesthelper.initializeUserCollection()
+    await apiBlogsTesthelper.initializeBlogCollection()
+  })
+
   test('null test', () => { expect(true).toBeTruthy() })
 
   test('GET: palauttaa kaikki kirjaukset, vastauksen tyyppi JSON', async () => {
@@ -96,7 +84,6 @@ describe('/api/blogs', () => {
       const blogsAfterPost = getResponse.body
       expect(blogsAfterPost.length).toEqual(apiBlogsTesthelper.blogEntriesForTesting.length + 1)
       expect(blogsAfterPost.map(b => b.author)).toContain(testEntryFull.author)
-
     })
 
   test('POST: puuttuva title tai url johtaa virheeseen 400', async () => {
@@ -109,7 +96,6 @@ describe('/api/blogs', () => {
       .set('Content-type', 'application/json; charset=utf-8')
       .send(testEntryUndefTitle)
     expect(titlelessResponse.status).toEqual(400)
-
   })
 
   test('POST: lisättyyn blogiin on liitetty *jonkun* käyttäjän tiedot', async () => {
@@ -122,7 +108,6 @@ describe('/api/blogs', () => {
 
     const savedBlog = getResponse.body
     expect(!!savedBlog.user && !!savedBlog.user.username).toBeTruthy()
-
   })
 
   test('DELETE: http-status 204; kirjaus kadonnut kannasta', async () => {
@@ -140,7 +125,6 @@ describe('/api/blogs', () => {
     expect(countAfter).toEqual(countBefore - 1)
 
     expect(_.some(blogsAfter, b => b.id === idToDelete)).toBeFalsy()
-
   })
 
   test('PUT: http-status 200, dokumentin kentät ovat päivittyneet kannassa', async () => {
@@ -158,6 +142,5 @@ describe('/api/blogs', () => {
       testEntryUpdates,
       (valBefore, key) => blogAfter[key] === valBefore
     )).toBeTruthy()
-
   })
 })

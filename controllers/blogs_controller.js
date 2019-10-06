@@ -1,12 +1,7 @@
-// router for blog entry handling
-//
-
 const express = require('express')
 const Blog = require('../models/blog')
 const app = express()
 
-// get all blogs in database
-// async/await implementation
 app.get('/', async (request, response, next) => {
   try {
     const blogs = await Blog.find({}).populate('user')
@@ -16,7 +11,6 @@ app.get('/', async (request, response, next) => {
   }
 })
 
-// fetch a single blog by id
 app.get('/:id', async (request, response, next) => {
   try {
     const id = request.params.id
@@ -27,19 +21,18 @@ app.get('/:id', async (request, response, next) => {
   }
 })
 
-// post a new blog
 app.post('/', async (request, response, next) => {
   try {
     const blogData = request.body
     const User = require('../models/user') // dev setup
-    const anyUser = await User.findOne({ username: 'usera' })
+    const anyUser = await User.findOne({})
     if (!anyUser) { throw new Error('kannassa oltava käyttäjiä') }
 
     const blog = new Blog({ ...blogData, user: anyUser.id })
     const blogSaveResult = await blog.save()
 
     anyUser.blogs.push(blog.id)
-    const userSaveResult = await anyUser.save()
+    await anyUser.save()
 
     response.status(200).json(blogSaveResult)
   } catch (error) {
@@ -47,7 +40,6 @@ app.post('/', async (request, response, next) => {
   }
 })
 
-// delete a blog
 app.delete('/:id', async (request, response, next) => {
   try {
     const id = request.params.id
@@ -58,7 +50,6 @@ app.delete('/:id', async (request, response, next) => {
   }
 })
 
-// update a blog
 app.put('/:id', async (request, response, next) => {
   try {
     const id = request.params.id

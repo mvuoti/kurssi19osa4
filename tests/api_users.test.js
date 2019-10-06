@@ -10,7 +10,6 @@ const { initializeBlogCollection } = require('./api_blogs_testhelper')
 
 const api = supertest(app)
 
-// connect or die
 mongoose
   .connect(config.MONGO_URL, config.MONGO_OPTIONS)
   .catch(e => {
@@ -18,7 +17,6 @@ mongoose
     process.exit(1)
   })
 
-// data for tests
 const {
   usersInDbPriorTests,
   userToCreate,
@@ -27,18 +25,17 @@ const {
   userToCreateDuplicateUsername
 } = require('./users_for_testing')
 
-// setting up tests, finalizing test set
-beforeEach(async () => {
-  await initializeUserCollection()
-  await initializeBlogCollection()
-})
 afterAll(() => {
   mongoose.connection.close()
 })
 
-// tests to do
 describe('/api/users', () => {
-  test('GET / : status 200, kaikki käyttäjät palautetaan', async () => {
+  beforeEach(async () => {
+    await initializeUserCollection()
+    await initializeBlogCollection()
+  })
+
+  test('GET: status 200, kaikki käyttäjät palautetaan', async () => {
     const result = await api.get('/api/users')
     expect(result.status).toEqual(200)
     const usersInResult = result.body
@@ -47,7 +44,7 @@ describe('/api/users', () => {
     )).toBeTruthy()
   })
 
-  test('GET / : sanitointi; _id pois, kenttä id tilalle', async () => {
+  test('GET: sanitointi; _id pois, kenttä id tilalle', async () => {
     const result = await api.get('/api/users')
     const usersInResult = result.body
     expect(usersInResult.every(
@@ -55,19 +52,19 @@ describe('/api/users', () => {
     )).toBeTruthy()
   })
 
-  test('GET /: sanitointi; __v pois', async () => {
+  test('GET: sanitointi; __v pois', async () => {
     const result = await api.get('/api/users')
     const usersInResult = result.body
     expect(usersInResult.every(u => !u.__v)).toBeTruthy()
   })
 
-  test('GET /: sanitointi; passwordHash pois', async () => {
+  test('GET: sanitointi; passwordHash pois', async () => {
     const result = await api.get('/api/users')
     const usersInResult = result.body
     expect(usersInResult.every(u => !u.passwordHash)).toBeTruthy()
   })
 
-  test('GET /: kaikilla käyttäjillä lista blogeista', async () => {
+  test('GET: kaikilla käyttäjillä lista blogeista', async () => {
     const usersResult = await api.get('/api/users')
     const blogsResult = await api.get('/api/blogs')
     const usersInDb = usersResult.body

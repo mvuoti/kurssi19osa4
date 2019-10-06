@@ -14,7 +14,7 @@ app.post('/', async (req, res, next) => {
 
   if (password.length < 3) {
     const message = 'Password minimum length is 3'
-    res.status(400).json({message})
+    res.status(400).json({ message })
     return
   }
 
@@ -27,7 +27,7 @@ app.post('/', async (req, res, next) => {
   } catch (e) {
     if (e.name === 'ValidationError') {
       let message
-      if (!!e.errors.username) {
+      if (e.errors.username) {
         message = e.errors.username.message
       } else {
         message = e.name

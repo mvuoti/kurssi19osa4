@@ -15,7 +15,8 @@ if (!MONGO_PASSWORD) {
 const MONGO_URL = `mongodb+srv://${MONGO_USER}:${MONGO_PASSWORD}@cluster0-vsvmn.mongodb.net/${MONGO_DATABASE}?retryWrites=true&w=majority`
 const MONGO_OPTIONS = {
   useNewUrlParser: true,
-  useUnifiedTopology: true
+  useUnifiedTopology: true,
+  useFindAndModify: false
 }
 
 module.exports = {
