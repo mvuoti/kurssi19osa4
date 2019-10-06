@@ -9,7 +9,7 @@ const app = express()
 // async/await implementation
 app.get('/', async (request, response, next) => {
   try {
-    const blogs = await Blog.find({})
+    const blogs = await Blog.find({}).populate('user')
     response.status(200).json(blogs.map(b => b.toJSON()))
   } catch (error) {
     next(error)
@@ -20,7 +20,7 @@ app.get('/', async (request, response, next) => {
 app.get('/:id', async (request, response, next) => {
   try {
     const id = request.params.id
-    const blog = await Blog.findById(id)
+    const blog = await Blog.findById(id).populate('user')
     response.status(200).json(blog)
   } catch (error) {
     next(error)
@@ -30,9 +30,13 @@ app.get('/:id', async (request, response, next) => {
 // post a new blog
 app.post('/', async (request, response, next) => {
   try {
-    const blog = new Blog(request.body)
+    const blogData = request.body
+    const User = require('../models/user') // dev setup
+    const anyUser = await User.findOne({})
+    if (!anyUser) { throw new Error('kannassa oltava käyttäjiä') }
+    const blog = new Blog({ ...blogData, user: anyUser.id })
     const result = await blog.save()
-    response.status(201).json(result)
+    response.status(200).json(result)
   } catch (error) {
     next(error)
   }
