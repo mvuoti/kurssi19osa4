@@ -65,6 +65,8 @@ describe('Blog (model)', () => {
 })
 
 describe('/api/blogs', () => {
+  test('null test', () => { expect(true).toBeTruthy() })
+
   test('GET: palauttaa kaikki kirjaukset, vastauksen tyyppi JSON', async () => {
     const result = await api.get('/api/blogs')
     expect(result.status).toBe(200)

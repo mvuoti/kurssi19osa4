@@ -32,11 +32,16 @@ app.post('/', async (request, response, next) => {
   try {
     const blogData = request.body
     const User = require('../models/user') // dev setup
-    const anyUser = await User.findOne({})
+    const anyUser = await User.findOne({ username: 'usera' })
     if (!anyUser) { throw new Error('kannassa oltava käyttäjiä') }
+
     const blog = new Blog({ ...blogData, user: anyUser.id })
-    const result = await blog.save()
-    response.status(200).json(result)
+    const blogSaveResult = await blog.save()
+
+    anyUser.blogs.push(blog.id)
+    const userSaveResult = await anyUser.save()
+
+    response.status(200).json(blogSaveResult)
   } catch (error) {
     next(error)
   }

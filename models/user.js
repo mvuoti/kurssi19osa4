@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const mongooseUniqueValidator = require('mongoose-unique-validator')
+const Blog = require('../models/blog')
 
 const userSchema = mongoose.Schema({
   username: {
@@ -8,7 +9,11 @@ const userSchema = mongoose.Schema({
     unique: true
   },
   name: String,
-  passwordHash: String
+  passwordHash: String,
+  blogs: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Blog'
+  }]
 })
 userSchema.set('toJSON', {
   transform: (doc, obj) => {

@@ -13,7 +13,7 @@ app.post('/', async (req, res, next) => {
   const password = req.body.password
 
   if (password.length < 3) {
-    const message = "Password minimum length is 3"
+    const message = 'Password minimum length is 3'
     res.status(400).json({message})
     return
   }
@@ -22,11 +22,11 @@ app.post('/', async (req, res, next) => {
 
   try {
     const newUser = new User({ username, name, passwordHash })
-    const result = await newUser.save()
+    await newUser.save()
     res.status(200).json(newUser)
   } catch (e) {
     if (e.name === 'ValidationError') {
-      let message = undefined
+      let message
       if (!!e.errors.username) {
         message = e.errors.username.message
       } else {
@@ -40,7 +40,7 @@ app.post('/', async (req, res, next) => {
 })
 
 app.get('/', async (req, res) => {
-  const users = await User.find({})
+  const users = await User.find({}).populate('blogs')
   res.status(200).json(users)
 })
 
