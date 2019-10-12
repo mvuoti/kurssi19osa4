@@ -18,6 +18,7 @@ mongoose.connect(config.MONGO_URL, config.MONGO_OPTIONS)
 
 const blogsController = require('./controllers/blogs_controller')
 const usersController = require('./controllers/users_controller')
+const loginController = require('./controllers/login_controller')
 
 const app = express()
 app.use(cors())
@@ -25,6 +26,7 @@ app.use(middleware.dumpRequest)
 app.use(bodyParser.json())
 app.use('/api/blogs', blogsController)
 app.use('/api/users', usersController)
+app.use('/api/login', loginController)
 app.use(middleware.unknownEndpoint)
 app.use(middleware.handleError)
 

@@ -5,7 +5,7 @@ const app = express()
 
 const User = require('../models/user')
 
-const BCRYPT_ROUNDS = 10
+const { PASSWORD_BCRYPT_ROUNDS } = require('../utils/config')
 
 app.post('/', async (req, res, next) => {
   const username = req.body.username
@@ -18,7 +18,7 @@ app.post('/', async (req, res, next) => {
     return
   }
 
-  const passwordHash = await bcrypt.hash(password, BCRYPT_ROUNDS)
+  const passwordHash = await bcrypt.hash(password, PASSWORD_BCRYPT_ROUNDS)
 
   try {
     const newUser = new User({ username, name, passwordHash })
