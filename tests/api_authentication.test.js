@@ -83,7 +83,7 @@ afterAll(() => {
 describe('authorization', () => {
 
     test('creating a blog using a valid token succeeds, user from token',
-        async () => {
+        async (done) => {
             const blogPostResponse = await api.post('/api/blogs')
                 .set('Content-type', 'application/json')
                 .set('Authorization', goodAuthHeaderValue)
@@ -91,32 +91,36 @@ describe('authorization', () => {
             expect(blogPostResponse.status).toEqual(200)
             const savedBlogEntry = blogPostResponse.body
             expect(savedBlogEntry.user).toEqual(testUserId)
+            done()
         })
 
     test('creating a blog with a bad token fails with 401',
-        async () => {
+        async (done) => {
             const blogPostResponse = await api.post('/api/blogs')
                 .set('Content-type', 'application/json')
                 .set('Authorization', badTokenAuthHeaderValue)
                 .send(testBlogEntry)
             expect(blogPostResponse.status).toEqual(401)
+            done()
     })
    
     test('creating a blog without any token fails with 401',
-        async () => {
+        async (done) => {
             const blogPostResponse = await api.post('/api/blogs')
                 .set('Content-type', 'application/json')
                 .send(testBlogEntry)
             expect(blogPostResponse.status).toEqual(401)
+            done()
     })
 
     test('creating a blog using unsupported scheme fails with 400',
-        async () => {
+        async (done) => {
             const blogPostResponse = await api.post('/api/blogs')
                 .set('Content-type', 'application/json')
                 .set('Authorization', unsupportedAuthHeaderValue)
                 .send(testBlogEntry)
             expect(blogPostResponse.status).toEqual(400)
+            done()
     })
 
  })

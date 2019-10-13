@@ -11,7 +11,11 @@ const AUTHENTICATION_ERROR_MSG = 'Bad username or password'
 
 app.post('/', async (req, res, next) => {
   const { username, password } = req.body
-  const userDoc = await User.findOne({ username })
+  if (!username || !password) {
+    const message = 'Username or password missing'
+    return res.status(400).send({ message })
+  }
+  const userDoc = await User.findOne({ username: username })
   const userExists = !!userDoc
   const loginIsGood =
     userExists && bcrypt.compareSync(password, userDoc.passwordHash)
@@ -27,6 +31,7 @@ app.post('/', async (req, res, next) => {
     const responseBody = {
       username: userDoc.username,
       name: userDoc.name,
+      id: userDoc._id,
       token
     }
     return res.status(200).send(responseBody)

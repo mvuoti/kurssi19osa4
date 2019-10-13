@@ -54,28 +54,31 @@ afterAll(() => {
 })
 
 describe('POST /api/login', () => {
-  beforeEach(async () => {
+  beforeEach(async (done) => {
     await setupUserCollection()
+    done()
   })
 
-  test('unknown user -> status 401', async () => {
+  test('unknown user -> status 401', async (done) => {
     const loginRequestBody = testLoginRequests.nonexistent
     const result = await api.post('/api/login')
       .set('Content-type', 'application/json')
       .send(loginRequestBody)
     expect(result.status).toEqual(401)
+    done()
   })
 
-  test('bad password -> status 401', async () => {
+  test('bad password -> status 401', async (done) => {
     const loginRequestBody = testLoginRequests.wrongPassword
     const result = await api.post('/api/login')
       .set('Content-type', 'application/json')
       .send(loginRequestBody)
     expect(result.status).toEqual(401)
+    done()
   })
 
   test('good login -> status 200; response contains account details and token',
-    async () => {
+    async (done) => {
       const loginRequestBody = testLoginRequests.good
       const result = await api.post('/api/login')
         .set('Content-type', 'application/json')
@@ -83,5 +86,6 @@ describe('POST /api/login', () => {
       expect(result.status).toEqual(200)
       expect(result.body.username).toEqual(loginRequestBody.username)
       expect(result.body.token).toBeDefined()
+      done()
     })
 })
