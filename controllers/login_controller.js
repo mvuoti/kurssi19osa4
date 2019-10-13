@@ -29,9 +29,9 @@ app.post('/', async (req, res, next) => {
       name: userDoc.name,
       token
     }
-    res.status(200).send(responseBody)
+    return res.status(200).send(responseBody)
   } else {
-    res.status(401).send({
+    return res.status(401).send({
       message: AUTHENTICATION_ERROR_MSG
     })
   }
