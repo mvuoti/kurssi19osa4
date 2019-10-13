@@ -11,7 +11,6 @@ const User = require('../models/user')
 const app = require('../app')
 const api = supertest(app)
 
-
 // authentication headers for testin different scenarios
 let goodAuthHeaderValue = undefined // set in beforeAll()
 const badTokenAuthHeaderValue = 'Bearer thisWillNeverWork'
