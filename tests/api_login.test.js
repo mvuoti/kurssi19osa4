@@ -42,7 +42,8 @@ const setupUserCollection = async () => {
       PASSWORD_BCRYPT_ROUNDS
     )
   })
-  return testUserDoc.save()
+  await testUserDoc.save()
+  return
 }
 
 beforeAll(() => {

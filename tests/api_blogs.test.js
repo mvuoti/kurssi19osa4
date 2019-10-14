@@ -44,7 +44,7 @@ afterAll(() => {
 
 // schema-enforced default for likes
 describe('Blog (model)', () => {
-  test('POST: jos likes puuttuu, asetetaan oletusarvoksi 0', () => {
+  test('likes: oletusarvo 0, eli jos likes puuttuu, tulee oletusarvoksi 0', () => {
     const Blog = require('../models/blog')
     const newBlog = new Blog(testEntryUndefLikes)
     expect(newBlog.likes).toEqual(0)
