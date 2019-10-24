@@ -69,6 +69,9 @@ app.put('/:id', async (request, response, next) => {
   try {
     const id = request.params.id
     const values = request.body
+    if (typeof values.user === 'object') {
+      values.user = values.user.id // undo "populate" in get
+    }
     const updatedDoc = await Blog.findByIdAndUpdate(id, values, { new: true })
     return response.status(200).json(updatedDoc.toJSON())
   } catch (error) {
