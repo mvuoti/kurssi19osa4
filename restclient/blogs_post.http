@@ -35,3 +35,29 @@ Content-type: application/json
     "likes": 0,
     "user": "5d99f2f34f1cd43fa0ea87dc"
 }
+
+###
+
+POST http://localhost:3003/api/blogs
+Content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNlcHBvIiwiaWQiOiI1ZDlhMTJlMWU0MmRjZDQ0MjQ5OGQ1NDAiLCJpYXQiOjE1NzYwMDIwMDZ9.yboQ5nB5DCU-3Utc9wDPEGW5Lk13gzNenFpyZ3rER1M
+
+{
+    "title": "Radio ja petankki",
+    "author": "Francois Marconi",
+    "url": "http://www.wsoy.fi",
+    "likes": 0,
+    "user": "5d99f2f34f1cd43fa0ea87dc"
+}
+
+
+###
+
+POST http://localhost:3003/api/blogs/6d9a1398d908e332d848087d/comments
+Content-type: application/json
+
+{
+    "commentText": "Hyvästi sanottu."
+}
+
+

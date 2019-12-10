@@ -79,4 +79,21 @@ app.put('/:id', async (request, response, next) => {
   }
 })
 
+app.post('/:id/comments', async (request, response, next) => {
+  try {
+    const blogId = request.params.id
+    const comment= request.body.commentText
+    const blog = await Blog.findById(blogId)
+    if (blog === null) {
+      const message = 'Cannot add a comment to a nonexistent blog'
+      return response.status(400).json({message})
+    }
+    const oldCommentList = blog.comments
+    const newCommentList = [...oldCommentList, comment]
+    blog.comments = newCommentList
+    const savedBlog = await blog.save();
+  } catch (error) {
+    return next(error)
+  }
+})
 module.exports = app
