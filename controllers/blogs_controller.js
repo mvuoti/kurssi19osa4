@@ -92,6 +92,7 @@ app.post('/:id/comments', async (request, response, next) => {
     const newCommentList = [...oldCommentList, comment]
     blog.comments = newCommentList
     const savedBlog = await blog.save();
+    return response.status(200).json(savedBlog.toJSON())
   } catch (error) {
     return next(error)
   }
