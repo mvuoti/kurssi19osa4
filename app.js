@@ -28,6 +28,11 @@ app.use(bodyParser.json())
 app.use('/api/blogs', blogsController)
 app.use('/api/users', usersController)
 app.use('/api/login', loginController)
+if (process.env.NODE_ENV === 'test') {
+  console.log('*** TESTING MODE ****')
+  const testingController = require('./controllers/testing_controller')
+  app.use('/api/testing', testingController)
+}
 app.use(middleware.unknownEndpoint)
 app.use(middleware.handleError)
 
